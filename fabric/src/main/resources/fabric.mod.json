@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "reb",
+  "version": "${version}",
+
+  "name": "Roughly Enough Buttons",
+  "description": "It's all about buttons.",
+  "authors": ["Tigercrl","pama1234"],
+  "contact": {},
+
+  "license": "GNU GPL 3.0",
+  "icon": "assets/reb/icon.png",
+
+  "environment": "client",
+  "entrypoints": {},
+  "mixins": [
+    "reb.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.22",
+    "minecraft": ">=1.20.1"
+  }
+}
