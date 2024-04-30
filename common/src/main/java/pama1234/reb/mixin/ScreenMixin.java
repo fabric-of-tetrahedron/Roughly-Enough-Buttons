@@ -1,7 +1,5 @@
 package pama1234.reb.mixin;
 
-import com.replaymod.replay.handler.GuiHandler.InjectedButton;
-import com.simibubi.create.infrastructure.gui.OpenCreateMenuButton;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -29,12 +27,14 @@ import java.util.List;
 @Mixin(value = Screen.class, priority = 2000)
 public abstract class ScreenMixin {
     private static final ArrayList<String> keys = new ArrayList<>();
-    private static final ArrayList<Class<? extends Screen>> classes = new ArrayList<>();
+    private static final ArrayList<Class<? extends Screen>> screen_classes = new ArrayList<>();
+    private static final ArrayList<Class<? extends Button>> button_classes = new ArrayList<>();
 
     private static Vector2i pos = new Vector2i();
     private static boolean onResize;
 
     private static final boolean debug = true;
+    private static final boolean whiteList = false;
 
     static {
         keys.add("narrator.button.language");
@@ -43,9 +43,20 @@ public abstract class ScreenMixin {
         keys.add("midnightlib.overview.title");
 
 
-        classes.add(OptionsScreen.class);
-        classes.add(TitleScreen.class);
-        classes.add(PauseScreen.class);
+        screen_classes.add(OptionsScreen.class);
+        screen_classes.add(TitleScreen.class);
+        screen_classes.add(PauseScreen.class);
+
+        addClass("com.simibubi.create.infrastructure.gui.OpenCreateMenuButton");
+        addClass("com.replaymod.replay.handler.GuiHandler$InjectedButton");
+    }
+
+    private static void addClass(String s) {
+        try {
+            button_classes.add((Class<? extends Button>) Screen.class.getClassLoader().loadClass(s));
+        } catch (ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+        }
     }
 
     private static void tryMoveToPos(Button button) {
@@ -53,13 +64,18 @@ public abstract class ScreenMixin {
             Tooltip tooltip = button.getTooltip();
             if (tooltip != null) System.out.println(tooltip.toCharSequence(Minecraft.getInstance()));
         }
-        if (button instanceof OpenCreateMenuButton b) {
-            moveToPos(b, pos.x, pos.y);
-            return;
+        if (!whiteList) {
+            if (button.getHeight() == 20 && button.getWidth() == 20) {
+                moveToPos(button);
+                return;
+            }
         }
-        if (button instanceof InjectedButton b) {
-            moveToPos(b, pos.x, pos.y);
-            return;
+
+        for (var i : button_classes) {
+            if (i.isInstance(button)) {
+                moveToPos(button, pos.x, pos.y);
+                return;
+            }
         }
         Component message = button.getMessage();
         if (debug) System.out.println("Component message=" + message.getClass());
@@ -128,7 +144,7 @@ public abstract class ScreenMixin {
     }
 
     private static boolean updateStartPos(Object screen) {
-        for (Class i : classes) {
+        for (Class i : screen_classes) {
             if (i.isInstance(screen)) {
                 Vector2i v = RoughlyEnoughButtonsMod.buttonPos.get(i);
                 if (v == null) continue;

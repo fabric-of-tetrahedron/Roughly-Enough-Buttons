@@ -5,7 +5,7 @@ dependencies {
 
     // TODO
     modImplementation "maven.modrinth:distanthorizons:${distanthorizons_version}"
-    modImplementation "maven.modrinth:create-fabric:${create_fabric_version}"
+//    modImplementation "maven.modrinth:create-fabric:${create_fabric_version}"
     modImplementation "maven.modrinth:replaymod:${replaymod_version}"
 //    modImplementation "maven.modrinth:modern-ui:${modernui_version}"
 
