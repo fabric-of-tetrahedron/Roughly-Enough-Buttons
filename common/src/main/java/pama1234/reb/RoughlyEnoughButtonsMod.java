@@ -1,6 +1,11 @@
 package pama1234.reb;
 
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +18,16 @@ public class RoughlyEnoughButtonsMod {
 
     public static final HashMap<Class<?>, Vector2i> buttonPos = new HashMap<>();
 
+
     public static void init() {
+//        ScreenEvents.AFTER_INIT.register(Event.DEFAULT_PHASE,
+//                (Minecraft client, Screen screen, int scaledWidth, int scaledHeight) -> {
+//
+//                });
+    }
+
+    public static boolean isModLoaded(String string) {
+        return FabricLoader.getInstance().isModLoaded(string);
     }
 
     public static @NotNull TexturedButtonWidget createButton(ResourceLocation texture, int w, int h, boolean renderBackground, Button.OnPress pressAction) {

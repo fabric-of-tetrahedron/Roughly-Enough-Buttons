@@ -1,7 +1,6 @@
 package pama1234.reb.mixin;
 
 import com.mojang.realmsclient.gui.screens.RealmsNotificationsScreen;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -17,6 +16,8 @@ import pama1234.reb.RoughlyEnoughButtonsMod;
 import pama1234.reb.compat.DistantHorizons;
 import pama1234.reb.compat.ModernUI;
 import pama1234.reb.compat.NeoKeyWizard;
+
+import static pama1234.reb.RoughlyEnoughButtonsMod.isModLoaded;
 
 @Mixin(TitleScreen.class)
 public abstract class TitleScreenMixin extends Screen {
@@ -45,18 +46,14 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Inject(method = "createNormalMenuOptions", at = @At("RETURN"))
     public void afterCreateNormalMenuOptions(int i, int j, CallbackInfo callbackInfo) {
-        if (FabricLoader.getInstance().isModLoaded("distanthorizons")) {
-//            if (Config.Client.optionsButton.get()) {
-//                addRenderableWidget(createButton(DH_ICON_TEXTURE, (buttonWidget) -> minecraft.setScreen(GetConfigScreen.getScreen(this))));
-//            }
+        if (isModLoaded("distanthorizons")) {
             var b = DistantHorizons.addButton(this);
             if (b != null) addRenderableWidget(b);
         }
-        if (FabricLoader.getInstance().isModLoaded("nkw")) {
+        if (isModLoaded("nkw")) {
             addRenderableWidget(NeoKeyWizard.addButton(this));
         }
-        // https://github.com/BloCamLimb/ModernUI-MC/blob/master/fabric/src/main/java/icyllis/modernui/mc/fabric/MuiModMenuApi.java
-        if (FabricLoader.getInstance().isModLoaded("modernui")) {
+        if (isModLoaded("modernui")) {
             addRenderableWidget(ModernUI.addButton(this));
         }
     }
