@@ -27,6 +27,7 @@ import java.util.List;
 @Mixin(value = Screen.class, priority = 2000)
 public abstract class ScreenMixin {
     private static final ArrayList<String> keys = new ArrayList<>();
+    private static final ArrayList<String> keys_blacklist = new ArrayList<>();
     private static final ArrayList<Class<? extends Screen>> screen_classes = new ArrayList<>();
     private static final ArrayList<Class<? extends Button>> button_classes = new ArrayList<>();
 
@@ -42,6 +43,7 @@ public abstract class ScreenMixin {
         keys.add("distanthorizons.title");
         keys.add("midnightlib.overview.title");
 
+        keys_blacklist.add("narrator.button.difficulty_lock");
 
         screen_classes.add(OptionsScreen.class);
         screen_classes.add(TitleScreen.class);
@@ -64,12 +66,6 @@ public abstract class ScreenMixin {
             Tooltip tooltip = button.getTooltip();
             if (tooltip != null) System.out.println(tooltip.toCharSequence(Minecraft.getInstance()));
         }
-        if (!whiteList) {
-            if (button.getHeight() == 20 && button.getWidth() == 20) {
-                moveToPos(button);
-                return;
-            }
-        }
 
         for (var i : button_classes) {
             if (i.isInstance(button)) {
@@ -85,12 +81,20 @@ public abstract class ScreenMixin {
             if (contents instanceof TranslatableContents translatableContents) {
                 String key = translatableContents.getKey();
                 if (debug) System.out.println("String key=" + key);
+                if (keys_blacklist.contains(key)) return;
                 if (keys.contains(key)) {
                     if (debug) System.out.println("button w=" + button.getWidth() + " h=" + button.getHeight());
                     if (button.getHeight() == 20 && button.getWidth() == 20) {
                         moveToPos(button);
+                        return;
                     }
                 }
+            }
+        }
+        if (!whiteList) {
+            if (button.getHeight() == 20 && button.getWidth() == 20) {
+                moveToPos(button);
+                return;
             }
         }
     }
