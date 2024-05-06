@@ -1,7 +1,6 @@
 package pama1234.reb.mixin;
 
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -15,7 +14,6 @@ import pama1234.reb.RoughlyEnoughButtonsMod;
 import pama1234.reb.compat.DistantHorizons;
 import pama1234.reb.compat.ModernUI;
 import pama1234.reb.compat.NeoKeyWizard;
-import pama1234.reb.compat.ReplayMod;
 
 import java.util.List;
 
@@ -36,14 +34,15 @@ public class PauseScreenMixin extends Screen {
     }
 
     private void eachButton(List<AbstractWidget> buttons) {
-        boolean flag = false;
-        if (FabricLoader.getInstance().isModLoaded("replaymod")) {
-            flag = ReplayMod.testHaveReplayModButton(buttons);
-        }
+//        boolean flag = false;
+//        if (FabricLoader.getInstance().isModLoaded("replaymod")) {
+//            flag = ReplayMod.testHaveReplayModButton(buttons);
+//        }
 
         for (var button : buttons) {
             if (button.getMessage().equals(Component.translatable("menu.returnToGame"))) {
-                RoughlyEnoughButtonsMod.buttonPos.put(PauseScreen.class, new Vector2i(button.getX(), button.getY() + (flag ? -24 : 24)));
+                RoughlyEnoughButtonsMod.buttonPos.put(PauseScreen.class, new Vector2i(button.getX(), button.getY() - 24));
+//                RoughlyEnoughButtonsMod.buttonPos.put(PauseScreen.class, new Vector2i(button.getX(), button.getY() + (flag ? -24 : 24)));
             }
         }
     }

@@ -34,7 +34,7 @@ public abstract class ScreenMixin {
     private static Vector2i pos = new Vector2i();
     private static boolean onResize;
 
-    private static final boolean debug = true;
+    private static final boolean debug = false;
     private static final boolean whiteList = false;
 
     static {
@@ -69,8 +69,10 @@ public abstract class ScreenMixin {
 
         for (var i : button_classes) {
             if (i.isInstance(button)) {
-                moveToPos(button, pos.x, pos.y);
-                return;
+                if (button.getHeight() == 20 && button.getWidth() == 20) {
+                    moveToPos(button, pos.x, pos.y);
+                    return;
+                }
             }
         }
         Component message = button.getMessage();
